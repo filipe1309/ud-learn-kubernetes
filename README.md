@@ -22,36 +22,6 @@ This project was developed following "[Kubernetes for the Absolute Beginners - H
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## :scroll: Requirements
-
-- [Docker](https://www.docker.com/)
-- [Kubernetes](https://kubernetes.io/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## :cd: Installation
-
-```sh
-git clone https://github.com/filipe1309/ud-learn-kubernetes.git
-```
-
-```sh
-cd ud-learn-kubernetes
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## :runner: Running
-
-```sh
-make run
-```
-
-> Access http://localhost
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 ## :memo: License
 
 [MIT](https://choosealicense.com/licenses/mit/)
