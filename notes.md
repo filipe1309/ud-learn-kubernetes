@@ -5,6 +5,13 @@
 
 ## Section 5
 
+| Kind | Version |
+| --- | --- |
+| Pod | v1 |
+| Service | v1 |
+| ReplicaSet | apps/v1 |
+| Deployment | apps/v1 |
+
 ```sh
 kubectl apply -f pod.yaml
 ```
@@ -123,5 +130,63 @@ kubectl rollout status deployment/myapp-deployment
 kubectl edit deployment myapp-deployment
 ```
 
+### Section 6: Networking in Kubernetes
+
+IP Addrees is assignd to a Pod (not to a container like in docker)
+
+When a Kubernetes its created, 
+
+- each node receives its won IP address (ex 198.168.1.2…)
+- a privite network is created with the IP 10.244.0.0, and the Pods are attached to it with sub-nets like 10.244.0.1, 10.244.0.2 etc
+- When the cluster has more than 1 node (worker) the pods IP will conflict!!!!
+    - because 2 or more Pod will have the same IP Address
+    - So kubernetes expect us to set the network correctely
+        - all Containers/Pods can communicate to one another without NAT
+        - all Nodes can communicate with all containers and vice-versa without NAT
+        - There are several pre-built solutions available: cisco, flannel, nsx, cilium…
+            - It will create a different private network for each Node (ex 10.244.0.0, 10.244.0.1)
+
+### Section 7: Services
+
+Types
+
+- ClusterIP
+- NodePort
+- LoadBalancer
+
+NodePort = Node port (30000 - 32767, if not defined it will be a random number in this range)
+
+Port = Service Port
+
+TargetPort = Pod Port (default equals to Port)
+
+NodePort → Port → TargetPort
+
+curl NODE_IP:NodePort
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30004
+  selector:
+    app: myapp
+```
+
 ```sh
+kubectl apply -f service.yaml
+kubectl get svc
+```
+
+With kubernetes on Docker Desktop: http://localhost:30004/  
+
+With minikube get the address with `minikube service myapp-service --url`, ex: http://192.168.99.101:30004  
+
+
 
