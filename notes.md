@@ -154,6 +154,13 @@ Types
 - NodePort
 - LoadBalancer
 
+#### NodePort
+
+- Expose the service on each Node's IP at a static port (NodePort)
+- A ClusterIP service, to which the NodePort service will route, is automatically created
+- You'll be able to contact the NodePort service, from outside the cluster, by requesting `<NodeIP>:<NodePort>`
+
+
 NodePort = Node port (30000 - 32767, if not defined it will be a random number in this range)
 
 Port = Service Port
@@ -188,5 +195,58 @@ With kubernetes on Docker Desktop: http://localhost:30004/
 
 With minikube get the address with `minikube service myapp-service --url`, ex: http://192.168.99.101:30004  
 
+#### ClusterIP
+
+- only accessible within the cluster
+- default type of service
+- Expose the service on a Cluster-internal IP
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service-clusterip
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: myapp
+```
+
+#### LoadBalancer
+
+- Expose the service externally using a cloud provider's load balancer
+- NodePort and ClusterIP services, to which the external load balancer will route, are automatically created
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service-loadbalancer
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: myapp
+```
 
 
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service 
+  namespace: default
+spec:
+  ports:
+  - nodePort: 30080
+    port: 8080
+    targetPort: 8080
+  selector:
+    name: simple-webapp
+  type: NodePort
+```
