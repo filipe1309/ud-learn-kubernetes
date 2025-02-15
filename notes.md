@@ -292,4 +292,32 @@ kubectl get pods,svc
 Vote App: <http://localhost:30004/>  
 Result App: <http://localhost:30005/>
 
+```sh
+kubectl delete --all svc,pods,deployments,rs
+```
 
+Now with deployments
+
+```sh
+kubectl create -f section-8/voting-app/voting-app-deploy.yaml
+kubectl create -f section-8/voting-app/voting-app-service.yaml
+kubectl create -f section-8/voting-app/redis-deploy.yaml
+kubectl create -f section-8/voting-app/redis-service.yaml
+kubectl create -f section-8/voting-app/postgres-deploy.yaml
+kubectl create -f section-8/voting-app/postgres-service.yaml
+kubectl create -f section-8/voting-app/worker-app-deploy.yaml
+kubectl create -f section-8/voting-app/result-app-deploy.yaml
+kubectl create -f section-8/voting-app/result-app-service.yaml
+
+kubectl get all
+```
+
+https://github.com/mmumshad/kubernetes-example-voting-app-singlefile/blob/master/voting-app.yaml
+
+```sh
+kubectl scale deployment voting-app-deploy --replicas=3
+kubectl get deploy voting-app-deploy
+kubectl get pods
+```
+
+https://github.com/kodekloudhub/example-voting-app-kubernetes
