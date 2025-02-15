@@ -193,6 +193,10 @@ kubectl get svc
 
 With kubernetes on Docker Desktop: http://localhost:30004/  
 
+```sh
+kubectl get nodes -o yaml | grep -- "- address:"
+```
+
 With minikube get the address with `minikube service myapp-service --url`, ex: http://192.168.99.101:30004  
 
 #### ClusterIP
@@ -250,3 +254,42 @@ spec:
     name: simple-webapp
   type: NodePort
 ```
+
+### Section 8: Microservices Architecture
+
+Connecting containers with each other using `--link` flag
+
+docker run --links
+
+```sh
+docker run -d --name=redis redis
+docker run -d --name=db postgres:9.4
+docker run -d --name=vote -p 5000:80 --link redis:redis voting-app
+docker run -d --name=result -p 5001:80 --link db:db result-app
+docker run -d --name=worker --link db:db --link redis:redis worker
+```
+
+Connecting containers using kubernetes services
+
+1. Deploy 5 PODS (Redis, DB, Vote, Result, Worker)
+2. Create a ClusterIP service for Redis and DB
+3. Create a NodePort service for Vote and Result
+
+```sh
+kubectl create -f section-8/voting-app/voting-app-pod.yaml
+kubectl create -f section-8/voting-app/voting-app-service.yaml
+kubectl create -f section-8/result-app/redis-pod.yaml
+kubectl create -f section-8/result-app/redis-service.yaml
+kubectl create -f section-8/result-app/postgres-pod.yaml
+kubectl create -f section-8/result-app/postgres-service.yaml
+kubectl create -f section-8/result-app/work-app-pod.yaml
+kubectl create -f section-8/result-app/result-app-pod.yaml
+kubectl create -f section-8/result-app/result-app-service.yaml
+
+kubectl get pods,svc
+```
+
+Vote App: <http://localhost:30004/>  
+Result App: <http://localhost:30005/>
+
+
